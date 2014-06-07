@@ -1,0 +1,11 @@
+library("sqldf", lib.loc="C:/Users/pnaray2/Documents/R/win-library/3.1")
+temp <- tempfile()
+url <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
+download.file(url,temp)
+unzip(temp,exdir=getwd())
+powerdata <- read.csv.sql("household_power_consumption.txt",sep=";",sql='select * from file where Date ="1/2/2007" or Date = "2/2/2007"')
+unlink(temp)
+png(file="plot1.png",width=480,height=480)
+hist(powerdata$Global_active_power,col="red",xlab="Global Active Power(kilowatts)",main="Global Active Power")
+dev.off()
+detach("package:sqldf", unload=TRUE)
