@@ -1,0 +1,13 @@
+library("sqldf")
+temp <- tempfile()
+url <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
+download.file(url,temp)
+unzip(temp,exdir=getwd())
+powerdata <- read.csv.sql("household_power_consumption.txt",sep=";",sql='select * from file where Date ="1/2/2007" or Date = "2/2/2007"')
+unlink(temp)
+datetimecontact <- paste(as.Date(powerdata$Date,format="%d/%m/%Y") , powerdata$Time)
+concat <- strptime(datetimecontact,format = "%Y-%m-%d %H:%M:%S")
+png(file="plot2.png",width=480,height=480)
+plot(data.frame(concat, powerdata$Global_active_power),type="l",ylab ="Global Active Power(kilowatts)",xlab="")
+dev.off()
+detach("package:sqldf", unload=TRUE)
